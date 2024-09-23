@@ -1,0 +1,1 @@
+gcc CMakeFiles/chord.dir/src/main.c.o CMakeFiles/chord.dir/src/bg_auto_chord.c.o -o chord  -lev 

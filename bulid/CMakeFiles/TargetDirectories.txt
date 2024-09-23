@@ -1,0 +1,3 @@
+/home/bango/BG_Auto_Chord/bulid/CMakeFiles/chord.dir
+/home/bango/BG_Auto_Chord/bulid/CMakeFiles/edit_cache.dir
+/home/bango/BG_Auto_Chord/bulid/CMakeFiles/rebuild_cache.dir
