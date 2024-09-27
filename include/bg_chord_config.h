@@ -5,6 +5,14 @@
 
 #define CHORD_DEBUG
 
+#ifdef CHORD_DEBUG
+//#define   HIGH_DEBUG_LEVEL  
+//#define   SUPER_DEBUG_LEVEL 
+#endif
+
+#define SIMPLEFY_MODE 0             
+#define NORMAL_MODE   1
+#define ENJOY_MODE    2
 
 
 typedef struct{
