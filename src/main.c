@@ -3,7 +3,7 @@
 
 void main()
 {
-    uint8_t chord[6] = {0};
+    uint8_t chord[7] = {0};
     BG_chord.Auto_Chord(chord,0,4);
     
 

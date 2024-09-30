@@ -14,13 +14,14 @@
 #define FACTORY_MODE_CHOICE CHOICE_SIMPLEFY_MODE    //Chose the chord mode for factory setting
 
 #define CHOICE_SIMPLEFY_MODE 0             
-#define CHOICE_NORMAL_MODE   1
-#define CHOICE_ENJOY_MODE    2
+//#define CHOICE_NORMAL_MODE   1
+#define CHOICE_ENJOY_MODE    1
 
 #define CONFIG_ENABLE_INT    1                   //Config Model state for factory setting   
 #define CONFIG_SPAN_INT      2                  //Config Max guitar fret span for factory setting
 #define CONFIG_KEY_INT       0                   //Config guitar key for factory setting
-
+#define CONFIG_MAX_RULE_INT  4
+#define CONFIG_MAX_FRET_INT  12
 
 
 //Define the data struct to record per var state while model working.
