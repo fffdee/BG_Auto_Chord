@@ -99,7 +99,7 @@ void Get_MinMax_fret(uint8_t *chord, uint8_t *minv, uint8_t *maxv)
             if (last_min < *minv)
                 *minv = last_min;
             last_min = *minv;
-#ifdef HIGH_DEBUG_LEVEL
+#ifdef SUPER_DEBUG_LEVEL
             printf("string is %d max is %d min is  %d last_min is %d\n", string, *maxv, *minv, last_min);
 #endif
         }
@@ -108,7 +108,7 @@ void Get_MinMax_fret(uint8_t *chord, uint8_t *minv, uint8_t *maxv)
             if (last_min < *minv)
                 *minv = last_min;
             last_min = *minv;
-#ifdef HIGH_DEBUG_LEVEL
+#ifdef SUPER_DEBUG_LEVEL
             printf("max is %d min is  %d last_min is %d\n", *maxv, *minv, last_min);
 #endif
         }
@@ -524,14 +524,14 @@ uint8_t get_min_fret_count(uint8_t *chord)
 
     uint8_t max = 0, min = 0;
     Get_MinMax_fret(chord, &min, &max);
-    uint8_t count=0;
+    uint8_t count = 0;
     for (uint8_t string = chord[6]; string < 6; string++)
     {
 
-        if (chord[string] == min&&chord[string]>0){
+        if (chord[string] == min && chord[string] > 0)
+        {
             count++;
         }
-            
     }
     return count;
 }
@@ -549,9 +549,11 @@ void Chord_Optimizer(uint8_t tone, uint8_t property)
 
         if (chord_run_data.chord_result[i][6] != 0xff && max <= 3)
         {
+#ifdef CHORD_DEBUG
+    
             printf("**********************Optimizer********************************\n");
             printf("[6] is %d\n", chord_run_data.chord_result[i][6]);
-
+#endif
             for (uint8_t string = chord_run_data.chord_result[i][6]; string < 6; string++)
                 for (int8_t k = 0; k < chord_run_data.rule_count; k++)
                     if ((chord_run_data.chord_result[i][string] + base_tone[string]) % 12 == (chord_run_data.chord_rule[k]) % 12)
@@ -566,8 +568,10 @@ void Chord_Optimizer(uint8_t tone, uint8_t property)
 
                 if (check_count > 1)
                     Optimized_tone[loop] = chord_run_data.chord_rule[loop];
+#ifdef CHORD_DEBUG
 
                 printf("chord is %d loop is %d,rule is %d real is %d \n", i, loop, chord_run_data.chord_rule[loop], check_count);
+#endif
                 loop++;
             }
 
@@ -578,8 +582,7 @@ void Chord_Optimizer(uint8_t tone, uint8_t property)
                 {
 
                     uint8_t string = chord_run_data.chord_result[i][6] + 1;
-                   
-                    
+
                     while (string < 6)
                     {
 
@@ -594,16 +597,25 @@ void Chord_Optimizer(uint8_t tone, uint8_t property)
                                     if (fret < chord_run_data.chord_result[i][string] && (chord_run_data.chord_result[i][string] + base_tone[string]) % 12 != chord_run_data.chord_rule[chord_run_data.rule_count - 1])
                                     {
                                         if (get_min_fret_count(chord_run_data.chord_result[i]) < 2)
+                                        {
                                             chord_run_data.chord_result[i][string] = fret;
-                                        printf("flag1 mincount is %d fret is %d\n string is %d\n", get_min_fret_count(chord_run_data.chord_result[i]), fret, string);
+#ifdef CHORD_DEBUG
+                                            printf("flag1 mincount is %d fret is %d\n string is %d\n", get_min_fret_count(chord_run_data.chord_result[i]), fret, string);
+#endif
+                                        }
                                     }
 
                                     if (Optimized_tone[count] == (chord_run_data.chord_result[i][string] + base_tone[string]) % 12 && fret < chord_run_data.chord_result[i][string])
                                     {
                                         if ((base_tone[string] + fret) % 12 == chord_run_data.chord_rule[rule] && (base_tone[string] + fret) % 12 != Optimized_tone[count])
-                                            if (get_min_fret_count(chord_run_data.chord_result[i])< 2)
+                                            if (get_min_fret_count(chord_run_data.chord_result[i]) < 2)
+                                            {
+#ifdef CHORD_DEBUG
+
+                                                printf("flag2 mincount is %dfret is %d\n string is %d\n", get_min_fret_count(chord_run_data.chord_result[i]), (base_tone[string] + fret) % 12, string);
+#endif
                                                 chord_run_data.chord_result[i][string] = fret;
-                                        printf("flag2 mincount is %dfret is %d\n string is %d\n",get_min_fret_count(chord_run_data.chord_result[i]), (base_tone[string] + fret) % 12, string);
+                                            }
                                     }
                                 }
                             }
@@ -638,21 +650,27 @@ void Chord_Filter(uint8_t *chord)
                     result_index = i;
                     temp = min_fret;
                 }
-
+#ifdef CHORD_DEBUG
                 printf("result is %d temp is %d\n", result_index, temp);
+#endif
             }
         }
-
+#ifdef CHORD_DEBUG
         // result_index = i;
         printf("*****************Result_Chord*****************\n");
-
+#endif
         for (uint8_t j = 0; j < 7; j++)
         {
+
             chord[j] = chord_run_data.chord_result[result_index][j];
+#ifdef CHORD_DEBUG
             printf("string is %d  val is %d \n", j, chord_run_data.chord_result[result_index][j]);
+#endif
         }
     }
+#ifdef CHORD_DEBUG
     Graph_chord(chord);
+#endif
 }
 
 BG_ERR BG_chord_Auto_Chord(uint8_t *chord, uint8_t tone, uint8_t property)
