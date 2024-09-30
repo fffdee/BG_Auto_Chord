@@ -519,6 +519,23 @@ void Ergonomics_Check(uint8_t tone, uint8_t property)
     }
 }
 
+uint8_t get_min_fret_count(uint8_t *chord)
+{
+
+    uint8_t max = 0, min = 0;
+    Get_MinMax_fret(chord, &min, &max);
+    uint8_t count=0;
+    for (uint8_t string = chord[6]; string < 6; string++)
+    {
+
+        if (chord[string] == min&&chord[string]>0){
+            count++;
+        }
+            
+    }
+    return count;
+}
+
 void Chord_Optimizer(uint8_t tone, uint8_t property)
 {
     uint8_t check_count, loop = 0;
@@ -561,6 +578,8 @@ void Chord_Optimizer(uint8_t tone, uint8_t property)
                 {
 
                     uint8_t string = chord_run_data.chord_result[i][6] + 1;
+                   
+                    
                     while (string < 6)
                     {
 
@@ -574,14 +593,17 @@ void Chord_Optimizer(uint8_t tone, uint8_t property)
 
                                     if (fret < chord_run_data.chord_result[i][string] && (chord_run_data.chord_result[i][string] + base_tone[string]) % 12 != chord_run_data.chord_rule[chord_run_data.rule_count - 1])
                                     {
-                                        chord_run_data.chord_result[i][string] = fret;
-                                        printf("fret is %d\n string is %d\n", fret, string);
+                                        if (get_min_fret_count(chord_run_data.chord_result[i]) < 2)
+                                            chord_run_data.chord_result[i][string] = fret;
+                                        printf("flag1 mincount is %d fret is %d\n string is %d\n", get_min_fret_count(chord_run_data.chord_result[i]), fret, string);
                                     }
 
-                                    if (Optimized_tone[count] == (chord_run_data.chord_result[i][string] + base_tone[string]) % 12 && fret<chord_run_data.chord_result[i][string] )
+                                    if (Optimized_tone[count] == (chord_run_data.chord_result[i][string] + base_tone[string]) % 12 && fret < chord_run_data.chord_result[i][string])
                                     {
-                                        if((base_tone[string] + fret) % 12 == chord_run_data.chord_rule[rule]&&(base_tone[string] + fret) % 12!=Optimized_tone[count])
-                                        chord_run_data.chord_result[i][string] = fret;
+                                        if ((base_tone[string] + fret) % 12 == chord_run_data.chord_rule[rule] && (base_tone[string] + fret) % 12 != Optimized_tone[count])
+                                            if (get_min_fret_count(chord_run_data.chord_result[i])< 2)
+                                                chord_run_data.chord_result[i][string] = fret;
+                                        printf("flag2 mincount is %dfret is %d\n string is %d\n",get_min_fret_count(chord_run_data.chord_result[i]), (base_tone[string] + fret) % 12, string);
                                     }
                                 }
                             }
